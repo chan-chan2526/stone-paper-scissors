@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="./Images/logo.png" />
+    <title>Rock Paper Scissor</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Roboto", sans-serif;
+    }
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+    }
+    @keyframes scaleBgOnce {
+      0% {
+        transform: scale(0.5); /* Start smaller */
+        opacity: 0; /* Start invisible */
+      }
+      50% {
+        transform: scale(1); /* Scale to full size */
+        opacity: 1; /* Fade in */
+      }
+      100% {
+        transform: scale(1); /* Stay at full size */
+        opacity: 1; /* Fully visible */
+      }
+    }
+
+    .bg-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bg-container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("./Images/star.png");
+      background-size: cover;
+      background-position: center;
+      animation: scaleBgOnce 3s ease-in-out forwards;
+      z-index: -1; 
+    }
+  </style>
+  <body
+    class="flex flex-col overflow-x-hidden items-center justify-center bg-[#8CC461] font-[Roboto] max-w-screen w-screen min-h-screen"
+  >
+    <div class="flex w-full px-10 py-5 items-end justify-end">
+      <!--if reset button neded
+        which clears your score count and computer-->
+      <!--<button
+        class="resetGame w-[200px] bg-[#FFA943] text-[#FFFFFF] h-[40px] rounded-lg border-[#FFFFFF] border-2 text-center font-semibold text-[21px]"
+        style="letter-spacing: 0.1rem"
+      >
+        RESET GAME
+      </button>-->
+    </div>
+    <!-- Background Screen -->
+    <div
+      class="flex flex-col gap-5 w-full items-center justify-between min-h-[80vh]"
+    >
+      <!-- Score Div -->
+      <div
+        class="flex items-center justify-center w-[800px] h-[158px] rounded-xl border-2 border-white"
+      >
+        <div class="flex items-start justify-between w-full h-full p-2 px-5">
+          <span
+            class="tracking-wide text-white font-semibold text-[40px] leading-[3rem]"
+            >ROCK <br />
+            PAPER <br />
+            SCISSORS</span
+          >
+          <div class="flex items-center justify-center gap-5 h-full">
+            <div
+              class="flex flex-col items-center justify-center p-2 px-5 bg-[#FFFFFF] w-[139px] h-[128px] rounded-lg"
+            >
+              <span
+                class="text-center font-semibold text-[17px] leading-5 text-[#656565] tracking-wide"
+                style="letter-spacing: 0.1rem"
+                >COMPUTER SCORE</span
+              >
+              <span
+                class="computerScore font-bold text-[68px] text-center leading-[79.69px] text-[#252525]"
+              >
+                0
+              </span>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center p-2 px-5 bg-[#FFFFFF] w-[139px] h-[128px] rounded-lg"
+            >
+              <span
+                class="text-center font-bold text-[17px] leading-5 text-[#656565] tracking-wide"
+                style="letter-spacing: 0.1rem"
+                >Your SCORE</span
+              >
+              <span
+                class="yourScore font-extrabold text-[68px] text-center leading-[79.69px] text-[#252525]"
+              >
+                0
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Choose Tiles Div -->
+      <div class="ChooseDiv flex flex-col gap-20 items-center justify-center">
+        <div class="flex items-center justify-between w-[350px]">
+          <div
+            class="Rock cursor-pointer w-[110px] z-10 h-[110px] flex items-center justify-center rounded-full border-[10px] border-[#0074B6] bg-white"
+          >
+            <img src="./Images/fist.png" alt="Stone" loading="lazy" />
+          </div>
+          <div class="w-[273px] absolute z-0 p-2 bg-black opacity-50"></div>
+          <div
+            class="Scissor cursor-pointer w-[110px] z-10 h-[110px] flex items-center justify-center rounded-full border-[10px] border-[#BD00FF] bg-white"
+          >
+            <img src="./Images/scissor.png" alt="Scissor" loading="lazy" />
+          </div>
+        </div>
+        <div class="flex items-start justify-end">
+          <div
+            class="w-[200px] -mt-5 rotate-[60deg] absolute z-0 p-2 bg-black opacity-50"
+          ></div>
+          <div
+            class="Paper cursor-pointer w-[110px] z-10 h-[110px] flex items-center justify-center rounded-full border-[10px] border-[#FFA943] bg-white"
+          >
+            <img src="./Images/paper.png" alt="Paper" loading="lazy" />
+          </div>
+          <div
+            class="w-[200px] -mt-14 -mr-24 -rotate-[60deg] absolute z-0 p-2 bg-black opacity-50"
+          ></div>
+        </div>
+      </div>
+      <!-- Winner Div -->
+      <div
+        class="ResultDiv hidden flex flex-col gap-20 items-center justify-center h-[350px]"
+      >
+        <div class="flex items-center justify-between w-[800px] px-10">
+          <div class="flex flex-col items-center justify-center gap-5">
+            <span
+              class="w-[113px] z-10 text-nowrap font-semibold text-[17px] text-[#FFFFFF]"
+              style="letter-spacing: 0.1rem"
+              >YOU PICKED</span
+            >
+            <div
+              class="yourAura hidden absolute z-0 mt-8 w-[350px] h-[350px] rounded-full bg-[#66B248] flex items-center justify-center"
+            >
+              <div
+                class="w-[300px] h-[300px] rounded-full bg-[#32A62F] flex items-center justify-center"
+              >
+                <div
+                  class="w-[250px] h-[250px] rounded-full bg-[#289A27] flex items-center justify-center"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="yourPicked w-[140px] z-10 h-[140px] flex items-center justify-center rounded-full border-[10px] border-[#0074B6] bg-white"
+            >
+              <img src="./Images/fist.png" alt="Stone" loading="lazy" />
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-2 flex-col">
+            <span
+              class="whoWin font-extrabold text-[#FFFFFF] text-center text-[39px] leading-[25.7px]"
+              style="letter-spacing: 0.2rem"
+              >Loading......</span
+            >
+            <span
+              class="Against font-extrabold text-[#FFFFFF] text-center text-[25px] leading-[29.3px]"
+              style="letter-spacing: 0.2rem"
+              >AGAINST PC</span
+            >
+            <button
+              class="playAgain bg-white mt-2 font-semibold rounded-lg border-0 outline-none w-[174px] h-[44px] text-center text-[#6B6B6B] text-[15px]"
+              style="letter-spacing: 0.2rem"
+            >
+              PLAY AGAIN
+            </button>
+          </div>
+          <div class="flex flex-col items-center justify-center gap-5">
+            <span
+              class="w-[113px] z-10 text-nowrap font-semibold text-[17px] text-[#FFFFFF]"
+              style="letter-spacing: 0.1rem"
+              >PC PICKED</span
+            >
+            <div
+              class="pcAura hidden absolute z-0 mt-8 w-[350px] h-[350px] rounded-full bg-[#66B248] flex items-center justify-center"
+            >
+              <div
+                class="w-[300px] h-[300px] rounded-full bg-[#32A62F] flex items-center justify-center"
+              >
+                <div
+                  class="w-[250px] h-[250px] rounded-full bg-[#289A27] flex items-center justify-center"
+                ></div>
+              </div>
+            </div>
+            <div
+              class="w-[140px] computerPicked z-10 h-[140px] flex items-center justify-center rounded-full border-[10px] border-[#BD00FF] bg-white"
+            >
+              <img src="./Images/scissor.png" alt="Scissor" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Rule Div -->
+      <div
+        class="rulesDiv hidden absolute bottom-[150px] right-16 border-[10px] border-[#FFFFFF] bg-[#004429] w-[278px] gap-3 h-[325px] py-5 rounded-lg flex flex-col items-center justify-center"
+      >
+        <div
+          class="closeRules cursor-pointer absolute -top-10 -right-10 border-[10px] border-[#FFFFFF] rounded-full w-[70px] h-[70px] flex items-center justify-center bg-[#FF0000] font-normal text-[44px] text-white"
+        >
+          <span style="font-family: 'Dangrek', cursive">X</span>
+        </div>
+        <span
+          class="w-[156px] text-[29px] text-center w-full font-medium text-[#FFFFFF]"
+          >Game Rules</span
+        >
+        <div
+          class="flex items-center gap-3 w-full px-5 justify-center flex-col"
+        >
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Rock beats scissors, scissors beat paper, and paper beats
+              rock.</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Agree ahead of time whether you’ll count off “rock, paper,
+              scissors, shoot” or just “rock, paper, scissors.”</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Use rock, paper, scissors to settle minor decisions or simply
+              play to pass the time</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >If both players lay down the same hand, each player lays down
+              another hand</span
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="flex items-end justify-end w-full px-10 gap-5">
+        <button
+          class="rulesBtn w-[119px] text-[#FFFFFF] h-[40px] rounded-lg border-[#FFFFFF] border-2 text-center font-semibold text-[21px]"
+          style="letter-spacing: 0.1rem"
+        >
+          RULES
+        </button>
+        <button
+          class="nextBtn hidden w-[119px] text-[#FFFFFF] h-[40px] rounded-lg border-[#FFFFFF] border-2 text-center font-semibold text-[21px]"
+          style="letter-spacing: 0.1rem"
+        >
+          NEXT
+        </button>
+      </div>
+    </div>
+    <!-- Congratulation Screen -->
+    <div
+      class="congratulationScreen hidden w-full h-full absolute bg-[#8CC461] z-20 flex flex-col items-center justify-center"
+    >
+      <div
+        class="w-[504px] flex flex-col gap-5 items-center justify-center min-h-[90vh]"
+      >
+        <div
+          class="bg-container w-[504px] h-[297px] flex items-end justify-center"
+        >
+          <img src="./Images/trophy.png" alt="Trophy" loading="lazy" />
+        </div>
+        <div class="flex flex-col items-center justify-center gap-5">
+          <span
+            class="text-white font-semibold w-[464px] h-[86px] text-[91px] text-center"
+            style="letter-spacing: 0.1rem"
+            >HURRAY!!</span
+          >
+          <span
+            class="text-white font-semibold text-[41px] text-center"
+            style="letter-spacing: 0.1rem"
+            >YOU WON THE GAME</span
+          >
+        </div>
+        <div class="flex items-center justify-center">
+          <button
+            class="closeCongratulation bg-white mt-2 font-semibold rounded-lg border-0 outline-none w-[174px] h-[44px] text-center text-[#6B6B6B] text-[15px]"
+            style="letter-spacing: 0.2rem"
+          >
+            PLAY AGAIN
+          </button>
+        </div>
+      </div>
+      <!-- Rule Div -->
+      <div
+        class="rulesDiv1 hidden absolute bottom-[100px] right-16 border-[10px] border-[#FFFFFF] bg-[#004429] w-[278px] gap-3 h-[325px] py-5 rounded-lg flex flex-col items-center justify-center"
+      >
+        <div
+          class="closeRules1 cursor-pointer absolute -top-10 -right-10 border-[10px] border-[#FFFFFF] rounded-full w-[70px] h-[70px] flex items-center justify-center bg-[#FF0000] font-normal text-[44px] text-white"
+        >
+          <span style="font-family: 'Dangrek', cursive">X</span>
+        </div>
+        <span
+          class="w-[156px] text-[29px] text-center w-full font-medium text-[#FFFFFF]"
+          >Game Rules</span
+        >
+        <div
+          class="flex items-center gap-3 w-full px-5 justify-center flex-col"
+        >
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Rock beats scissors, scissors beat paper, and paper beats
+              rock.</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Agree ahead of time whether you’ll count off “rock, paper,
+              scissors, shoot” or just “rock, paper, scissors.”</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >Use rock, paper, scissors to settle minor decisions or simply
+              play to pass the time</span
+            >
+          </div>
+          <div class="flex items-center justify-center gap-3">
+            <div class="bg-[#FFD600] w-[8px] h-[8px]"></div>
+            <span
+              class="w-[211px] text-[13px] text-left leading-[15.23px] w-full font-normal text-[#FFFFFF]"
+              >If both players lay down the same hand, each player lays down
+              another hand</span
+            >
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="flex items-end justify-end w-full px-10 gap-5">
+        <button
+          class="rulesBtn1 z-50 w-[119px] text-[#FFFFFF] h-[40px] rounded-lg border-[#FFFFFF] border-2 text-center font-semibold text-[21px]"
+          style="letter-spacing: 0.1rem"
+        >
+          RULES
+        </button>
+      </div>
+    </div>
+    <!-- Script File -->
+    <script src="script1.js"></script>
+  </body>
+</html>
